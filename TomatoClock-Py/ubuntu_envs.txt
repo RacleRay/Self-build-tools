@@ -1,0 +1,4 @@
+# ubuntu packages
+python3-gbulb
+libnotify-dev
+python3-gi
