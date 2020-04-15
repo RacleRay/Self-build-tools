@@ -7,8 +7,12 @@ if __name__=='__main__':
         name='tomato',
         version='0.0.1',
         author='Sviatoslav Abakumov, Racle',
+
         packages=find_packages('.'),
         include_package_data=True,
+        package_data={'clock': ['*.png'],},
+        zip_safe=False,
+
         entry_points={
             'console_scripts': [
                 'tomato = clock.main:main',
@@ -16,6 +20,7 @@ if __name__=='__main__':
         install_requires=[
         'attrs',
             ],
+
         classifiers=[
                 'Development Status :: 4 - Beta',
                 'Environment :: Console',
