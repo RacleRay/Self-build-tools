@@ -23,15 +23,12 @@ class Clock:
             'break': self.work_notice,
             'long_break': self.work_notice,
             'not_break': self.break_notice,
+            'not_break_long': self.long_break_notice,
             'not_work': self.work_notice}
 
         while True:
-            if self.state == 'cancel':
-                break
-            if self.state == 'break' and self.count >= 3:
+            if self.state == 'work' and self.count >= 2:
                 self.state = 'long_work'
-                self.count = 0
-            if self.state == 'long_break':
                 self.count = 0
             future, callback = self.future_callback()
             # 向callback传入不同notice function的参数
@@ -50,7 +47,7 @@ class Clock:
 
             # future中获取action，处理逻辑在future_callback函数
             action = yield from future
-            if action.action != 'not_break' and action != 'not_work':
+            if action.action == 'break' and self.state == 'work':
                 self.count += 1
                 action.counter = self.count
 
@@ -72,7 +69,7 @@ class Clock:
         notification.set_timeout(Notify.EXPIRES_NEVER)
         notification.default_action = 'long_break'
         notification.add_action('long_break', '休息15分钟吧', callback)
-        notification.add_action('not_break', '5分钟后再休息', callback)
+        notification.add_action('not_break_long', '5分钟后再休息', callback)
         return notification
 
     @staticmethod
@@ -81,7 +78,7 @@ class Clock:
         notification.set_timeout(Notify.EXPIRES_NEVER)
         notification.default_action = 'work'
         notification.add_action('work',  '开始工作', callback)
-        notification.add_action('not_break', '5分钟后再工作', callback)
+        notification.add_action('not_work', '5分钟后再工作', callback)
         return notification
 
     @staticmethod
